@@ -62,6 +62,7 @@ class BurgerBuilder extends Component {
       <div>
         <Modal close={this.closeConfirmModal} show={this.state.confirmOrder}>
           <OrderSummary
+            price={this.state.totalPrice}
             ingredientNames={INGREDIENT_NAMES}
             ingredients={this.state.ingredients}
           />
