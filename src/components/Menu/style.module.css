@@ -1,3 +1,16 @@
 .Menu {
+  /* background-color: black; */
+  list-style: none;
   display: flex;
+  flex-flow: column;
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  align-items: center;
+}
+
+@media (min-width: 500px) {
+  .Menu {
+    flex-flow: row;
+  }
 }

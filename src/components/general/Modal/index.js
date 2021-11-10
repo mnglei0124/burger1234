@@ -4,7 +4,7 @@ import css from "./style.module.css";
 
 const Modal = (props) => (
   <div>
-    <Shadow show={props.show} close={props.close} />
+    <Shadow show={props.show} onClick={props.close} />
     <div
       style={{
         transform: props.show ? "translateY(0)" : "translateY(-100vh)",
