@@ -3,6 +3,7 @@ import Burger from "../../components/Burger";
 import BuildControls from "../../components/BuildControls";
 import Modal from "../../components/general/Modal";
 import OrderSummary from "../../components/OrderSummary";
+import axios from "../../axios-orders";
 
 const INGREDIENT_PRICES = { Salad: 150, Cheese: 250, Bacon: 1800, Meat: 1500 };
 const INGREDIENT_NAMES = {
@@ -24,9 +25,40 @@ class BurgerBuilder extends Component {
     totalPrice: 0,
     purchasing: false,
     confirmOrder: false,
+    lastCustomerName: "N/A",
+  };
+
+  componentDidMount = () => {
+    axios.get("/orders.json").then((response) => {
+      let arr = Object.entries(response.data);
+      arr = arr.reverse();
+      arr.forEach((el) => {
+        console.log(el[1].location.name + " ==> " + el[1].price);
+      });
+
+      const last = arr[0];
+
+      this.setState({
+        ingredients: last[1].ingredients,
+        totalPrice: last[1].price,
+        lastCustomerName: last[1].location.name,
+      });
+    });
   };
 
   continueOrder = () => {
+    const order = {
+      ingredients: this.state.ingredients,
+      price: this.state.totalPrice,
+      location: {
+        name: "Mnglei",
+        city: "UB",
+        street: "2nd 40k 10-16",
+      },
+    };
+    axios.post("/orders.json", order).then((response) => {
+      alert("nice!");
+    });
     console.log("continue done");
   };
 
@@ -73,6 +105,9 @@ class BurgerBuilder extends Component {
             ingredients={this.state.ingredients}
           />
         </Modal>
+        <p style={{ width: "100%", textAlign: "center", fontSize: "28px" }}>
+          last customer: {this.state.lastCustomerName}
+        </p>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
           showConfirmModal={this.showConfirmModal}
