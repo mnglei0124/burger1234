@@ -4,6 +4,7 @@ import BuildControls from "../../components/BuildControls";
 import Modal from "../../components/general/Modal";
 import OrderSummary from "../../components/OrderSummary";
 import axios from "../../axios-orders";
+import Spinner from "../../components/general/Spinner";
 
 const INGREDIENT_PRICES = { Salad: 150, Cheese: 250, Bacon: 1800, Meat: 1500 };
 const INGREDIENT_NAMES = {
@@ -26,24 +27,33 @@ class BurgerBuilder extends Component {
     purchasing: false,
     confirmOrder: false,
     lastCustomerName: "N/A",
+    loading: false,
+    loading_summay: false,
   };
 
   componentDidMount = () => {
-    axios.get("/orders.json").then((response) => {
-      let arr = Object.entries(response.data);
-      arr = arr.reverse();
-      arr.forEach((el) => {
-        console.log(el[1].location.name + " ==> " + el[1].price);
-      });
+    this.setState({ loading: true });
+    axios
+      .get("/orders.json")
+      .then((response) => {
+        let arr = Object.entries(response.data);
+        arr = arr.reverse();
+        arr.forEach((el) => {
+          console.log(el[1].location.name + " ==> " + el[1].price);
+        });
 
-      const last = arr[0];
+        const last = arr[0];
 
-      this.setState({
-        ingredients: last[1].ingredients,
-        totalPrice: last[1].price,
-        lastCustomerName: last[1].location.name,
+        this.setState({
+          ingredients: last[1].ingredients,
+          totalPrice: last[1].price,
+          lastCustomerName: last[1].location.name,
+        });
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        this.setState({ loading: false });
       });
-    });
   };
 
   continueOrder = () => {
@@ -56,9 +66,13 @@ class BurgerBuilder extends Component {
         street: "2nd 40k 10-16",
       },
     };
-    axios.post("/orders.json", order).then((response) => {
-      alert("nice!");
-    });
+    this.setState({ loading_summay: true });
+    axios
+      .post("/orders.json", order)
+      .then((response) => {
+        // alert("nice!");
+      })
+      .finally(() => this.setState({ loading_summay: false }));
     console.log("continue done");
   };
 
@@ -97,14 +111,19 @@ class BurgerBuilder extends Component {
     return (
       <div>
         <Modal close={this.closeConfirmModal} show={this.state.confirmOrder}>
-          <OrderSummary
-            onCancel={this.closeConfirmModal}
-            onContinue={this.continueOrder}
-            price={this.state.totalPrice}
-            ingredientNames={INGREDIENT_NAMES}
-            ingredients={this.state.ingredients}
-          />
+          {this.state.loading_summay ? (
+            <Spinner />
+          ) : (
+            <OrderSummary
+              onCancel={this.closeConfirmModal}
+              onContinue={this.continueOrder}
+              price={this.state.totalPrice}
+              ingredientNames={INGREDIENT_NAMES}
+              ingredients={this.state.ingredients}
+            />
+          )}
         </Modal>
+        {this.state.loading && <Spinner />}
         <p style={{ width: "100%", textAlign: "center", fontSize: "28px" }}>
           last customer: {this.state.lastCustomerName}
         </p>
