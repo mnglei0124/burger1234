@@ -26,35 +26,9 @@ class BurgerBuilder extends Component {
     totalPrice: 0,
     purchasing: false,
     confirmOrder: false,
-    lastCustomerName: "N/A",
-    loading: false,
-    loading_summay: false,
   };
 
-  componentDidMount = () => {
-    this.setState({ loading: true });
-    axios
-      .get("/orders.json")
-      .then((response) => {
-        let arr = Object.entries(response.data);
-        arr = arr.reverse();
-        arr.forEach((el) => {
-          console.log(el[1].location.name + " ==> " + el[1].price);
-        });
-
-        const last = arr[0];
-
-        this.setState({
-          ingredients: last[1].ingredients,
-          totalPrice: last[1].price,
-          lastCustomerName: last[1].location.name,
-        });
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        this.setState({ loading: false });
-      });
-  };
+  componentDidMount = () => {};
 
   continueOrder = () => {
     const order = {
@@ -123,10 +97,7 @@ class BurgerBuilder extends Component {
             />
           )}
         </Modal>
-        {this.state.loading && <Spinner />}
-        <p style={{ width: "100%", textAlign: "center", fontSize: "28px" }}>
-          last customer: {this.state.lastCustomerName}
-        </p>
+
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
           showConfirmModal={this.showConfirmModal}

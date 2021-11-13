@@ -1,11 +1,15 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import css from "./style.module.css";
 
 const MenuItems = (props) => (
   <li className={css.MenuItem}>
-    <a className={props.active ? css.active : null} href={props.link}>
+    <NavLink
+      className={({ isActive }) => (isActive ? css.active : null)}
+      to={props.link}
+    >
       {props.children}
-    </a>
+    </NavLink>
   </li>
 );
 

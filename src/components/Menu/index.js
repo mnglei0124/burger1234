@@ -7,7 +7,7 @@ const Menu = () => (
     <MenuItem active link="/">
       ШИНЭ ЗАХИАЛГА
     </MenuItem>
-    <MenuItem link="/login">НЭВТРЭХ</MenuItem>
+    <MenuItem link="/orders">ЗАХИАЛГУУД</MenuItem>
   </ul>
 );
 
