@@ -6,6 +6,7 @@ import OrderPage from "../OrderPage";
 import { Routes, Route } from "react-router-dom";
 
 import css from "./style.module.css";
+import { ShippingPage } from "../ShippingPage";
 
 class App extends Component {
   state = {
@@ -29,6 +30,7 @@ class App extends Component {
         <main className={css.Content}>
           <Routes>
             <Route path="/orders" element={<OrderPage />} />
+            <Route path="/ship" element={<ShippingPage />} />
             <Route path="/" element={<BurgerPage />} />
           </Routes>
         </main>
