@@ -4,6 +4,7 @@ import BurgerPage from "../BurgerPage";
 import SideBar from "../../components/SideBar";
 import OrderPage from "../OrderPage";
 import { Routes, Route } from "react-router-dom";
+import ContactData from "../../components/ContactData";
 
 import css from "./style.module.css";
 import { ShippingPage } from "../ShippingPage";
@@ -30,7 +31,9 @@ class App extends Component {
         <main className={css.Content}>
           <Routes>
             <Route path="/orders" element={<OrderPage />} />
-            <Route path="/ship" element={<ShippingPage />} />
+            <Route path="/ship" element={<ShippingPage />}>
+              <Route path="/ship/contact" element={<ContactData />} />
+            </Route>
             <Route path="/" element={<BurgerPage />} />
           </Routes>
         </main>
