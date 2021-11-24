@@ -4,15 +4,45 @@ import css from "./style.module.css";
 
 class ContactData extends React.Component {
   state = {
-    dun: 0,
-    addr: { name: null, city: null, street: null },
+    price: 0,
+    name: null,
+    city: null,
+    street: null,
+  };
+  changeName = (e) => {
+    this.setState({ name: e.target.value });
+  };
+  changeCity = (e) => {
+    this.setState({ city: e.target.value });
+  };
+  changeStreet = (e) => {
+    this.setState({ street: e.target.value });
   };
   render() {
     return (
       <div className={css.ContactData}>
-        <input type="text" name="name" placeholder="Name"></input>
-        <input type="text" name="street" placeholder="Address"></input>
-        <input type="text" name="city" placeholder="City"></input>
+        {this.props.ingredients}
+        <br />
+        {this.props.price}
+
+        <input
+          onChange={this.changeName}
+          type="text"
+          name="name"
+          placeholder="Name"
+        ></input>
+        <input
+          onChange={this.changeCity}
+          type="text"
+          name="street"
+          placeholder="Address"
+        ></input>
+        <input
+          onChange={this.changeStreet}
+          type="text"
+          name="city"
+          placeholder="City"
+        ></input>
         <Button text="SUBMIT" btnType="Success" />
       </div>
     );

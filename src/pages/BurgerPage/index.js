@@ -48,11 +48,13 @@ const BurgerBuilder = () => {
     for (let name in ingredients) {
       params.push(name + "=" + ingredients[name]);
     }
-    const query = params.join("&");
-    console.log(query);
+
+    params.push("price=" + totalPrice);
+
+    console.log(params.join("&"));
     navigate({
       pathname: "/ship",
-      search: query,
+      search: params.join("&"),
     });
     closeConfirmModal();
   };
