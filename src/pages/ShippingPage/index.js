@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import Burger from "../../components/Burger";
 import Button from "../../components/general/Button";
-import ContactData from "../../components/ContactData";
 import css from "./style.module.css";
 
 export const ShippingPage = () => {
-  const [ingredients, setIngredients] = useState({
-    Salad: 1,
-    Cheese: 1,
-    Bacon: 1,
-    Meat: 1,
-  });
+  const [ingredients, setIngredients] = useState({});
   const [price, setPrice] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,12 +14,10 @@ export const ShippingPage = () => {
     const query = new URLSearchParams(location.search);
 
     const ingredients = {};
-    let price_t = 0;
     for (let param of query.entries()) {
-      if (param[0] === "price") price_t = param[1];
+      if (param[0] === "price") setPrice(param[1]);
       else ingredients[param[0]] = param[1];
     }
-    setPrice(price_t);
     setIngredients(ingredients);
   };
   useEffect(() => load(), []);
@@ -39,8 +31,8 @@ export const ShippingPage = () => {
       <p style={{ fontSize: "24px" }}>
         <strong>Enjoy your order...</strong>
       </p>
-      <p>
-        <strong>{price}</strong>
+      <p style={{ fontSize: "24px" }}>
+        Total:<strong> {price}₮</strong>
       </p>
       <Burger ingredients={ingredients} />
       <Button
@@ -48,11 +40,13 @@ export const ShippingPage = () => {
         btnType="Danger"
         text="ЗАХИАЛГЫГ ЦУЦЛАХ"
       />
-      <Button
-        clicked={showContactData}
-        btnType="Success"
-        text="ХҮРГЭЛТИЙН МЭДЭЭЛЭЛ ОРУУЛАХ"
-      />
+      <Link to="/ship/contact" state={{ price, ingredients }}>
+        <Button
+          clicked={showContactData}
+          btnType="Success"
+          text="ХҮРГЭЛТИЙН МЭДЭЭЛЭЛ ОРУУЛАХ"
+        />
+      </Link>
       <Outlet />
     </div>
   );

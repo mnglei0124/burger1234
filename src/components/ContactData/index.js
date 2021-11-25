@@ -1,52 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import Button from "../general/Button";
 import css from "./style.module.css";
+import axios from "../../axios-orders";
+import Spinner from "../general/Spinner";
 
-class ContactData extends React.Component {
-  state = {
-    price: 0,
-    name: null,
-    city: null,
-    street: null,
+const ContactData = (props) => {
+  const location = useLocation();
+  const [address, setAddress] = useState({
+    name: "",
+    city: "",
+    street: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const onChange = (e) => {
+    setAddress({ ...address, [e.target.name]: e.target.value });
   };
-  changeName = (e) => {
-    this.setState({ name: e.target.value });
+  const saveOrder = () => {
+    const order = {
+      ingredients: location.state.ingredients,
+      price: location.state.price,
+      location: {
+        ...address,
+      },
+    };
+    setLoading(true);
+    axios
+      .post("/orders.json", order)
+      .then((response) => {
+        // alert("nice!");
+      })
+      .finally(() => {
+        setLoading(false);
+        navigate("/orders", { replace: true });
+      });
+    console.log("continue done");
   };
-  changeCity = (e) => {
-    this.setState({ city: e.target.value });
-  };
-  changeStreet = (e) => {
-    this.setState({ street: e.target.value });
-  };
-  render() {
-    return (
-      <div className={css.ContactData}>
-        {this.props.ingredients}
-        <br />
-        {this.props.price}
 
-        <input
-          onChange={this.changeName}
-          type="text"
-          name="name"
-          placeholder="Name"
-        ></input>
-        <input
-          onChange={this.changeCity}
-          type="text"
-          name="street"
-          placeholder="Address"
-        ></input>
-        <input
-          onChange={this.changeStreet}
-          type="text"
-          name="city"
-          placeholder="City"
-        ></input>
-        <Button text="SUBMIT" btnType="Success" />
-      </div>
-    );
-  }
-}
+  return (
+    <div className={css.ContactData}>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div>
+          <input
+            onChange={onChange}
+            type="text"
+            name="name"
+            placeholder="Name"
+          ></input>
+          <input
+            onChange={onChange}
+            type="text"
+            name="street"
+            placeholder="Address"
+          ></input>
+          <input
+            onChange={onChange}
+            type="text"
+            name="city"
+            placeholder="City"
+          ></input>
+          <Button text="SUBMIT" btnType="Success" clicked={saveOrder} />
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default ContactData;

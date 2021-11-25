@@ -16,11 +16,13 @@ class OrderPage extends React.Component {
       .get("/orders.json")
       .then((response) => {
         this.setState({ orders: Object.entries(response.data).reverse() });
+        console.log(this.state.orders);
       })
       .catch((err) => console.log(err))
       .finally(() => {
         this.setState({ loading: false });
       });
+    console.log(this.state.orders);
   }
 
   render() {

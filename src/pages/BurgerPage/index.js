@@ -27,23 +27,6 @@ const BurgerBuilder = () => {
   let navigate = useNavigate();
 
   const continueOrder = () => {
-    // const order = {
-    //   ingredients: this.state.ingredients,
-    //   price: this.state.totalPrice,
-    //   location: {
-    //     name: "Mnglei",
-    //     city: "UB",
-    //     street: "2nd 40k 10-16",
-    //   },
-    // };
-    // this.setState({ loading_summay: true });
-    // axios
-    //   .post("/orders.json", order)
-    //   .then((response) => {
-    //     // alert("nice!");
-    //   })
-    //   .finally(() => this.setState({ loading_summay: false }));
-    // console.log("continue done");
     const params = [];
     for (let name in ingredients) {
       params.push(name + "=" + ingredients[name]);
