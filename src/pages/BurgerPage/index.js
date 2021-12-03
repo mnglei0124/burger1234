@@ -28,11 +28,11 @@ const BurgerPage = (props) => {
 
   const continueOrder = () => {
     const params = [];
-    for (let name in ingredients) {
-      params.push(name + "=" + ingredients[name]);
+    for (let name in props.burgerIngredients) {
+      params.push(name + "=" + props.burgerIngredients[name]);
     }
 
-    params.push("price=" + totalPrice);
+    params.push("price=" + props.price);
 
     console.log(params.join("&"));
     navigate({
@@ -51,7 +51,7 @@ const BurgerPage = (props) => {
   };
 
   const changeIngredient = (type, btnType) => {
-    const newIngredients = { ...ingredients };
+    const newIngredients = { ...props.burgerIngredients };
 
     if (btnType) {
       newIngredients[type]++;
@@ -68,7 +68,24 @@ const BurgerPage = (props) => {
     changeIngredients(newIngredients);
   };
 
-  const disabled = { ...ingredients };
+  // const addIngredient = (type) => {
+  //   const newIngredients = { ...props.burgerIngredients };
+  //   newIngredients[type]++;
+  //   const newPrice = totalPrice + INGREDIENT_PRICES[type];
+  //   setPurchasing(true);
+  //   setTotalPrice(newPrice);
+  //   changeIngredients(newIngredients);
+  // };
+  // const removeIngredient = (type) => {
+  //   const newIngredients = { ...props.burgerIngredients };
+  //   newIngredients[type]--;
+  //   const newPrice = totalPrice - INGREDIENT_PRICES[type];
+  //   setPurchasing(newPrice > 0 ? true : false);
+  //   setTotalPrice(newPrice);
+  //   changeIngredients(newIngredients);
+  // };
+
+  const disabled = { ...props.burgerIngredients };
   for (const key in disabled) {
     disabled[key] = disabled[key] <= 0;
   }
@@ -79,20 +96,20 @@ const BurgerPage = (props) => {
         <OrderSummary
           onCancel={closeConfirmModal}
           onContinue={continueOrder}
-          price={totalPrice}
+          price={props.price}
           ingredientNames={INGREDIENT_NAMES}
-          ingredients={ingredients}
+          ingredients={props.burgerIngredients}
         />
       </Modal>
 
-      <Burger ingredients={ingredients} />
+      <Burger ingredients={props.burgerIngredients} />
       <BuildControls
         showConfirmModal={showConfirmModal}
         ingredientNames={INGREDIENT_NAMES}
         disabled={!purchasing}
-        price={totalPrice}
+        price={props.price}
         disabledIngredients={disabled}
-        changeIngredient={changeIngredient}
+        changeIngredient={props.changeIngredient}
       />
     </div>
   );
@@ -107,9 +124,7 @@ const first = (state) => {
 
 const second = (dispatch) => {
   return {
-    addIngredient: (ingredientName) => dispatch({ type: "ADD_INGREDIENT" }),
-    removeIngredient: (ingredientName) =>
-      dispatch({ type: "REMOVE_INGREDIENT" }),
+    changeIngredient: (type, btnType) => dispatch({ type, btnType }),
   };
 };
 
