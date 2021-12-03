@@ -4,7 +4,7 @@ import BuildControls from "../../components/BuildControls";
 import Modal from "../../components/general/Modal";
 import OrderSummary from "../../components/OrderSummary";
 import { useNavigate } from "react-router-dom";
-//import axios from "../../axios-orders";
+import { connect } from "react-redux";
 
 const INGREDIENT_PRICES = { Salad: 150, Cheese: 250, Bacon: 1800, Meat: 1500 };
 const INGREDIENT_NAMES = {
@@ -14,7 +14,7 @@ const INGREDIENT_NAMES = {
   Meat: "Үхрийн мах",
 };
 
-const BurgerBuilder = () => {
+const BurgerPage = (props) => {
   const [ingredients, changeIngredients] = useState({
     Salad: 0,
     Cheese: 0,
@@ -72,6 +72,7 @@ const BurgerBuilder = () => {
   for (const key in disabled) {
     disabled[key] = disabled[key] <= 0;
   }
+  console.log(props);
   return (
     <div>
       <Modal close={closeConfirmModal} show={confirmOrder}>
@@ -97,4 +98,19 @@ const BurgerBuilder = () => {
   );
 };
 
-export default BurgerBuilder;
+const first = (state) => {
+  return {
+    burgerIngredients: state.ingredients,
+    price: state.totalPrice,
+  };
+};
+
+const second = (dispatch) => {
+  return {
+    addIngredient: (ingredientName) => dispatch({ type: "ADD_INGREDIENT" }),
+    removeIngredient: (ingredientName) =>
+      dispatch({ type: "REMOVE_INGREDIENT" }),
+  };
+};
+
+export default connect(first, second)(BurgerPage);
