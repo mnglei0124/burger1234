@@ -7,7 +7,7 @@ const BuildControls = (props) => {
   return (
     <div className={css.BuildControls}>
       <p>
-        Burger price: <strong>{props.price}</strong>
+        Burger price: <strong>{props.price ? props.price : 0}</strong>
       </p>
 
       {Object.keys(props.ingredientNames).map((el) => (

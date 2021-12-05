@@ -7,8 +7,9 @@ const INGREDIENT_PRICES = { Salad: 150, Cheese: 250, Bacon: 1800, Meat: 1500 };
 
 const reducer = (state = initialState, action) => {
   console.log("reducer ", action);
+
   if (action.btnType) {
-    console.log(state.totalPrice);
+    if (!state.totalPrice) state.totalPrice = 0;
     return {
       ingredients: {
         ...state.ingredients,

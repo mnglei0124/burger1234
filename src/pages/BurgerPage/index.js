@@ -5,6 +5,7 @@ import Modal from "../../components/general/Modal";
 import OrderSummary from "../../components/OrderSummary";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
+import * as actions from "../../redux/actions/burgerActions";
 
 const INGREDIENT_PRICES = { Salad: 150, Cheese: 250, Bacon: 1800, Meat: 1500 };
 const INGREDIENT_NAMES = {
@@ -115,17 +116,18 @@ const BurgerPage = (props) => {
   );
 };
 
-const first = (state) => {
+const mapStateToProps = (state) => {
   return {
     burgerIngredients: state.ingredients,
     price: state.totalPrice,
   };
 };
 
-const second = (dispatch) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    changeIngredient: (type, btnType) => dispatch({ type, btnType }),
+    changeIngredient: (type, btnType) =>
+      dispatch(actions.changeIngredient(type, btnType)),
   };
 };
 
-export default connect(first, second)(BurgerPage);
+export default connect(mapStateToProps, mapDispatchToProps)(BurgerPage);
