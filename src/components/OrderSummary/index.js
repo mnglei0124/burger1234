@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+
 import Button from "../general/Button";
 
 const OrderSummary = (props) => {
@@ -7,11 +9,15 @@ const OrderSummary = (props) => {
       <h3>Таны захиалга</h3>
       <p>Таны сонгосон орцууд: </p>
       <ul>
-        {Object.keys(props.ingredients).map((el) => (
-          <li key={el}>
-            {props.ingredientNames[el]} : {props.ingredients[el]}
-          </li>
-        ))}
+        {Object.keys(props.ingredients).map((el, i) => {
+          if (i === Object.keys(props.ingredients).length - 1) return null;
+          else
+            return (
+              <li key={el}>
+                {props.ingredientNames[el]} : {props.ingredients[el]}
+              </li>
+            );
+        })}
       </ul>
       <h3>Захиалгын үнэ: {props.price}₮</h3>
       <p>Үргэлжлүүлэх үү?</p>
@@ -25,4 +31,12 @@ const OrderSummary = (props) => {
   );
 };
 
-export default OrderSummary;
+const mapStateToProps = (state) => {
+  return {
+    ingredients: state.ingredients,
+    ingredientNames: state.ingredientNames,
+    price: state.totalPrice,
+  };
+};
+
+export default connect(mapStateToProps)(OrderSummary);

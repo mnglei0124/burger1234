@@ -1,9 +1,15 @@
 import React from "react";
 import BuildControl from "../BuildControl";
+import { connect } from "react-redux";
+import * as actions from "../../redux/actions/burgerActions";
 
 import css from "./style.module.css";
 
 const BuildControls = (props) => {
+  const disabledIngredients = { ...props.ingredients };
+  for (const key in disabledIngredients) {
+    disabledIngredients[key] = disabledIngredients[key] <= 0;
+  }
   return (
     <div className={css.BuildControls}>
       <p>
@@ -13,7 +19,7 @@ const BuildControls = (props) => {
       {Object.keys(props.ingredientNames).map((el) => (
         <BuildControl
           key={el}
-          disabledIngredients={props.disabledIngredients}
+          disabledIngredients={disabledIngredients}
           changeIngredient={props.changeIngredient}
           type={el}
           ingredient={props.ingredientNames[el]}
@@ -30,4 +36,20 @@ const BuildControls = (props) => {
   );
 };
 
-export default BuildControls;
+const mapStateToProps = (state) => {
+  return {
+    ingredients: state.ingredients,
+    price: state.totalPrice,
+    ingredientNames: state.ingredientNames,
+    disabled: !state.purchasing,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changeIngredient: (type, btnType) =>
+      dispatch(actions.changeIngredient(type, btnType)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BuildControls);
