@@ -38,7 +38,7 @@ const ShippingPage = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { price: state.totalPrice };
+  return { price: state.burgerReducer.totalPrice };
 };
 
 export default connect(mapStateToProps)(ShippingPage);
