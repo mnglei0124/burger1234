@@ -9,16 +9,7 @@ const BurgerPage = (props) => {
   const [confirmOrder, setConfirmOrder] = useState(false);
   let navigate = useNavigate();
   const continueOrder = () => {
-    const params = [];
-    for (let name in props.burgerIngredients) {
-      params.push(name + "=" + props.burgerIngredients[name]);
-    }
-
-    params.push("price=" + props.price);
-    navigate({
-      pathname: "/ship",
-      search: params.join("&"),
-    });
+    navigate("/ship");
     closeConfirmModal();
   };
 

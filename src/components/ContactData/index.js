@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import { connect } from "react-redux";
+
 import Button from "../general/Button";
 import css from "./style.module.css";
 import axios from "../../axios-orders";
 import Spinner from "../general/Spinner";
 
 const ContactData = (props) => {
-  const location = useLocation();
   const [address, setAddress] = useState({
     name: "",
     city: "",
@@ -18,24 +19,30 @@ const ContactData = (props) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
   };
   const saveOrder = () => {
+    const ingredients = (({ Salad, Cheese, Bacon, Meat }) => ({
+      Salad,
+      Cheese,
+      Bacon,
+      Meat,
+    }))(props.ingredients);
     const order = {
-      ingredients: location.state.ingredients,
-      price: location.state.price,
+      ingredients: ingredients,
+      price: props.price,
       location: {
         ...address,
       },
     };
+    console.log(props.ingredients);
     setLoading(true);
     axios
       .post("/orders.json", order)
       .then((response) => {
-        // alert("nice!");
+        alert("done!");
       })
       .finally(() => {
         setLoading(false);
         navigate("/orders", { replace: true });
       });
-    console.log("continue done");
   };
 
   return (
@@ -69,4 +76,11 @@ const ContactData = (props) => {
   );
 };
 
-export default ContactData;
+const mapStateToProps = (state) => {
+  return {
+    price: state.totalPrice,
+    ingredients: state.ingredients,
+  };
+};
+
+export default connect(mapStateToProps)(ContactData);

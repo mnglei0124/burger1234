@@ -1,26 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
+import { connect } from "react-redux";
+
 import Burger from "../../components/Burger";
 import Button from "../../components/general/Button";
 import css from "./style.module.css";
 
-export const ShippingPage = () => {
-  const [ingredients, setIngredients] = useState({});
-  const [price, setPrice] = useState(0);
-  const location = useLocation();
+const ShippingPage = (props) => {
   const navigate = useNavigate();
-  const load = () => {
-    const query = new URLSearchParams(location.search);
-
-    const ingredients = {};
-    for (let param of query.entries()) {
-      if (param[0] === "price") setPrice(param[1]);
-      else ingredients[param[0]] = param[1];
-    }
-    setIngredients(ingredients);
-  };
-  useEffect(() => load(), []);
 
   const showContactData = () => {
     navigate("/ship/contact", { replace: true });
@@ -32,22 +19,26 @@ export const ShippingPage = () => {
         <strong>Enjoy your order...</strong>
       </p>
       <p style={{ fontSize: "24px" }}>
-        Total:<strong> {price}₮</strong>
+        Total:<strong> {props.price ? props.price : 0}₮</strong>
       </p>
-      <Burger ingredients={ingredients} />
+      <Burger />
       <Button
         clicked={() => navigate(-1)}
         btnType="Danger"
         text="ЗАХИАЛГЫГ ЦУЦЛАХ"
       />
-      <Link to="/ship/contact" state={{ price, ingredients }}>
-        <Button
-          clicked={showContactData}
-          btnType="Success"
-          text="ХҮРГЭЛТИЙН МЭДЭЭЛЭЛ ОРУУЛАХ"
-        />
-      </Link>
+      <Button
+        clicked={showContactData}
+        btnType="Success"
+        text="ХҮРГЭЛТИЙН МЭДЭЭЛЭЛ ОРУУЛАХ"
+      />
       <Outlet />
     </div>
   );
 };
+
+const mapStateToProps = (state) => {
+  return { price: state.totalPrice };
+};
+
+export default connect(mapStateToProps)(ShippingPage);

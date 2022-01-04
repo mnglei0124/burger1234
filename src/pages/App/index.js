@@ -7,7 +7,7 @@ import { Routes, Route } from "react-router-dom";
 import ContactData from "../../components/ContactData";
 
 import css from "./style.module.css";
-import { ShippingPage } from "../ShippingPage";
+import ShippingPage from "../ShippingPage";
 
 class App extends Component {
   state = {
