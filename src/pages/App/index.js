@@ -1,13 +1,15 @@
 import React, { Component } from "react";
+import { Routes, Route } from "react-router-dom";
+
 import Toolbar from "../../components/Toolbar";
 import BurgerPage from "../BurgerPage";
 import SideBar from "../../components/SideBar";
 import OrderPage from "../OrderPage";
-import { Routes, Route } from "react-router-dom";
 import ContactData from "../../components/ContactData";
-
-import css from "./style.module.css";
 import ShippingPage from "../ShippingPage";
+import LoginPage from "../LoginPage";
+import SignupPage from "../SignupPage";
+import css from "./style.module.css";
 
 class App extends Component {
   state = {
@@ -30,6 +32,8 @@ class App extends Component {
         />
         <main className={css.Content}>
           <Routes>
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/orders" element={<OrderPage />} />
             <Route path="/ship" element={<ShippingPage />}>
               <Route path="/ship/contact" element={<ContactData />} />

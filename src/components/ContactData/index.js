@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { connect } from "react-redux";
 
 import Button from "../general/Button";
 import css from "./style.module.css";
-import axios from "../../axios-orders";
 import Spinner from "../general/Spinner";
+import * as actions from "../../redux/actions/orderActions";
 
 const ContactData = (props) => {
   const [address, setAddress] = useState({
@@ -13,11 +13,12 @@ const ContactData = (props) => {
     city: "",
     street: "",
   });
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const onChange = (e) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
   };
+
   const saveOrder = () => {
     const ingredients = (({ Salad, Cheese, Bacon, Meat }) => ({
       Salad,
@@ -25,29 +26,27 @@ const ContactData = (props) => {
       Bacon,
       Meat,
     }))(props.ingredients);
-    const order = {
+
+    const newOrder = {
       ingredients: ingredients,
       price: props.price,
       location: {
         ...address,
       },
     };
-    console.log(props.ingredients);
-    setLoading(true);
-    axios
-      .post("/orders.json", order)
-      .then((response) => {
-        alert("done!");
-      })
-      .finally(() => {
-        setLoading(false);
-        navigate("/orders", { replace: true });
-      });
+    props.saveOrderAction(newOrder);
   };
-
+  useEffect(() => {
+    if (props.newOrderStatus.finished && !props.newOrderStatus.error)
+      navigate("/orders", { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [saveOrder]);
   return (
     <div className={css.ContactData}>
-      {loading ? (
+      {props.price ? `Дүн: ${props.price}₮` : null}
+      {props.newOrderStatus.error &&
+        `Хадгалах явцад алдаа гарлаа: ${props.newOrderStatus.error}`}
+      {props.newOrderStatus.saving ? (
         <Spinner />
       ) : (
         <div>
@@ -80,7 +79,14 @@ const mapStateToProps = (state) => {
   return {
     price: state.burgerReducer.totalPrice,
     ingredients: state.burgerReducer.ingredients,
+    newOrderStatus: state.orderReducer.newOrder,
   };
 };
 
-export default connect(mapStateToProps)(ContactData);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    saveOrderAction: (newOrder) => dispatch(actions.saveOrder(newOrder)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactData);
