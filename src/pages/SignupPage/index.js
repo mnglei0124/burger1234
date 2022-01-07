@@ -17,6 +17,7 @@ const Signup = (props) => {
   const navigate = useNavigate();
   useEffect(() => {
     props.userId && navigate("/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.userId]);
 
   const changeEmail = (e) => {

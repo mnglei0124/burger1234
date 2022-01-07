@@ -6,10 +6,12 @@ import css from "./style.module.css";
 
 const Menu = (props) => (
   <ul className={css.Menu}>
-    <MenuItem link="/">ШИНЭ ЗАХИАЛГА</MenuItem>
-    <MenuItem link="/orders">ЗАХИАЛГУУД</MenuItem>
     {props.userId ? (
-      <MenuItem link="/logout">ГАРАХ</MenuItem>
+      <Fragment>
+        <MenuItem link="/">ШИНЭ ЗАХИАЛГА</MenuItem>
+        <MenuItem link="/orders">ЗАХИАЛГУУД</MenuItem>
+        <MenuItem link="/logout">ГАРАХ</MenuItem>
+      </Fragment>
     ) : (
       <Fragment>
         <MenuItem link="/login">НЭВТРЭХ</MenuItem>

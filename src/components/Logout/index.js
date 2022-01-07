@@ -10,6 +10,7 @@ const Logout = (props) => {
   useEffect(() => {
     props.logout();
     navigate("/login");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.isOut]);
   return null;
 };
