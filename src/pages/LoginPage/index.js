@@ -43,6 +43,10 @@ const Login = (props) => {
       {props.firebaseError && (
         <div style={{ color: "red" }}>{props.firebaseError}</div>
       )}
+      <div className={css.Remember}>
+        <input type="checkbox" id="remember" />
+        <label htmlFor="remember">Remember me</label>
+      </div>
       <Button text="Нэвтрэх" btnType="Success" clicked={login} />
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -12,6 +12,8 @@ import LoginPage from "../LoginPage";
 import SignupPage from "../SignupPage";
 import css from "./style.module.css";
 import Logout from "../../components/Logout";
+import * as actions from "../../redux/actions/loginActions";
+import * as signupActions from "../../redux/actions/signupActions";
 
 const App = (props) => {
   const navigate = useNavigate();
@@ -22,16 +24,33 @@ const App = (props) => {
       showSidebar: !prevState.showSidebar,
     }));
   };
-  props.userId && navigate("/login");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    const expdireDate = new Date(localStorage.getItem("expdireDate"));
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (token) {
+      if (expdireDate > new Date()) {
+        props.autoLogin(token, userId);
+        props.autoLogoutAfterMilliSec(
+          expdireDate.getTime() - new Date().getTime()
+        );
+      } else {
+        props.logout();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    if (!props.userId) navigate("/login");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.userId]);
   return (
     <div>
       <Toolbar toggleSideBar={toggleSideBar} />
       <SideBar showSidebar={state.showSidebar} toggleSideBar={toggleSideBar} />
       <main className={css.Content}>
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <strong>UserID: {props.userId}</strong>
-        </div>
-
         {props.userId ? (
           <Routes>
             <Route path="/logout" element={<Logout />} />
@@ -58,4 +77,14 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    autoLogin: (token, userId) =>
+      dispatch(actions.loginUserSuccess(token, userId)),
+    logout: () => dispatch(signupActions.logout()),
+    autoLogoutAfterMilliSec: () =>
+      dispatch(signupActions.autoLogoutAfterMilliSec()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

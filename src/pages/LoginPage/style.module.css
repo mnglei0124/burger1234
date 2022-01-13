@@ -13,3 +13,18 @@
   padding: 5px;
   margin: 10px auto;
 }
+
+.Remember {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.Remember input {
+  margin: 10px;
+}
+
+.Remember label {
+  align-self: flex-start;
+  padding-top: 4px;
+}
