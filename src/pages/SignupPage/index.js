@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router";
 
@@ -15,30 +15,13 @@ const Signup = (props) => {
     error: "",
   });
   const navigate = useNavigate();
-  useEffect(() => {
-    props.userId && navigate("/");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.userId]);
-
-  const changeEmail = (e) => {
-    setState({ ...state, email: e.target.value });
-  };
-
-  const changePassword0 = (e) => {
-    setState({ ...state, password0: e.target.value });
-  };
-  const changePassword1 = (e) => {
-    setState({ ...state, password1: e.target.value });
-  };
 
   const signup = () => {
     if (state.password0 === state.password1) {
       props.signupUser(state.email, state.password0);
     } else alert("password no match");
 
-    console.log(state.email);
-
-    console.log(state.password0);
+    navigate("/");
   };
 
   return (
@@ -46,17 +29,17 @@ const Signup = (props) => {
       <h1>Бүртгэлийн Форм</h1>
       <div>Та өөрийн мэдээллээ оруулна уу</div>
       <input
-        onChange={changeEmail}
+        onChange={(e) => setState({ ...state, email: e.target.value })}
         type="text"
         placeholder="Имайл хаяг"
       ></input>
       <input
-        onChange={changePassword0}
+        onChange={(e) => setState({ ...state, password0: e.target.value })}
         type="password"
         placeholder="Нууц үгээ оруулна уу"
       ></input>
       <input
-        onChange={changePassword1}
+        onChange={(e) => setState({ ...state, password1: e.target.value })}
         type="password"
         placeholder="Нууц үгээ давтана уу"
       ></input>

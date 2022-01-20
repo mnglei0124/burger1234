@@ -28,7 +28,7 @@ const App = (props) => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
     const expdireDate = new Date(localStorage.getItem("expdireDate"));
-    const refreshToken = localStorage.getItem("refreshToken");
+    //const refreshToken = localStorage.getItem("refreshToken");
 
     if (token) {
       if (expdireDate > new Date()) {

@@ -1,5 +1,6 @@
 import React from "react";
-
+import { connect } from "react-redux";
+import * as actions from "../../redux/actions/burgerActions";
 import css from "./style.module.css";
 
 const BuildControl = (props) => (
@@ -20,5 +21,10 @@ const BuildControl = (props) => (
     </button>
   </div>
 );
-
-export default BuildControl;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changeIngredient: (type, btnType) =>
+      dispatch(actions.changeIngredient(type, btnType)),
+  };
+};
+export default connect(null, mapDispatchToProps)(BuildControl);

@@ -15,6 +15,18 @@ const ContactData = (props) => {
   });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (props.newOrderStatus.finished && !props.newOrderStatus.error) {
+      navigate("/orders", { replace: true });
+    }
+
+    return () => {
+      console.log("order clearing...");
+      props.clearOrder();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.newOrderStatus.finished]);
+
   const onChange = (e) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
   };
@@ -37,11 +49,7 @@ const ContactData = (props) => {
     };
     props.saveOrderAction(newOrder);
   };
-  useEffect(() => {
-    if (props.newOrderStatus.finished && !props.newOrderStatus.error)
-      navigate("/orders", { replace: true });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [saveOrder]);
+
   return (
     <div className={css.ContactData}>
       {props.price ? `Дүн: ${props.price}₮` : null}
@@ -88,6 +96,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     saveOrderAction: (newOrder) => dispatch(actions.saveOrder(newOrder)),
+    clearOrder: () => dispatch(actions.clearOrder()),
   };
 };
 

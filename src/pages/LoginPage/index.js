@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router";
 import * as actions from "../../redux/actions/loginActions";
@@ -10,20 +10,22 @@ import Spinner from "../../components/general/Spinner";
 const Login = (props) => {
   const [state, setState] = useState({ email: "", password: "" });
   const navigate = useNavigate();
-  useEffect(() => {
-    props.userId && navigate("/");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.userId]);
 
   const changeEmail = (e) => {
-    setState({ ...state, email: e.target.value });
+    const value = e.target.value;
+    setState((formBefore) => ({
+      email: value,
+      password: formBefore.password,
+    }));
   };
 
   const changePassword = (e) => {
-    setState({ ...state, password: e.target.value });
+    const value = e.target.value;
+    setState({ ...state, password: value });
   };
 
   const login = () => {
+    navigate("/orders");
     props.login(state.email, state.password);
   };
   return (

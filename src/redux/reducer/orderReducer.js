@@ -18,6 +18,16 @@ const reducer = (state = initialState, action) => {
         loading: true,
       };
 
+    case "CLEAR_ORDER":
+      return {
+        ...state,
+        newOrder: {
+          saving: false,
+          finished: false,
+          error: null,
+        },
+      };
+
     case "LOAD_ORDERS_SUCCESS":
       return {
         ...state,
