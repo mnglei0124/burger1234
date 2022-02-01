@@ -1,61 +1,62 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
-import { connect } from "react-redux";
 
 import Button from "../general/Button";
 import css from "./style.module.css";
 import Spinner from "../general/Spinner";
-import * as actions from "../../redux/actions/orderActions";
+import BurgerContext from "../../context/BurgerContext";
 
 const ContactData = (props) => {
+  const burgerContext = useContext(BurgerContext);
   const [address, setAddress] = useState({
     name: "",
     city: "",
     street: "",
   });
   const navigate = useNavigate();
-
   useEffect(() => {
-    if (props.newOrderStatus.finished && !props.newOrderStatus.error) {
+    if (burgerContext.burger.finished && !burgerContext.burger.error) {
       navigate("/orders", { replace: true });
     }
 
     return () => {
       console.log("order clearing...");
-      props.clearOrder();
+      burgerContext.clearBurger();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.newOrderStatus.finished]);
+  }, [burgerContext.burger.finished]);
 
   const onChange = (e) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
   };
 
   const saveOrder = () => {
-    const ingredients = (({ Salad, Cheese, Bacon, Meat }) => ({
-      Salad,
-      Cheese,
-      Bacon,
-      Meat,
-    }))(props.ingredients);
+    // const ingredients = (({ Salad, Cheese, Bacon, Meat }) => ({
+    //   Salad,
+    //   Cheese,
+    //   Bacon,
+    //   Meat,
+    // }))(props.ingredients);
 
     const newOrder = {
-      userId: props.userId,
-      ingredients: ingredients,
-      price: props.price,
+      userId: "props.userId",
+      ingredients: burgerContext.burger.ingredients,
+      price: burgerContext.burger.totalPrice,
       location: {
         ...address,
       },
     };
-    props.saveOrderAction(newOrder);
+    burgerContext.saveBurger(newOrder);
   };
 
   return (
     <div className={css.ContactData}>
-      {props.price ? `Дүн: ${props.price}₮` : null}
-      {props.newOrderStatus.error &&
-        `Хадгалах явцад алдаа гарлаа: ${props.newOrderStatus.error}`}
-      {props.newOrderStatus.saving ? (
+      {burgerContext.burger.totalPrice
+        ? `Дүн: ${burgerContext.burger.totalPrice}₮`
+        : null}
+      {burgerContext.burger.error &&
+        `Хадгалах явцад алдаа гарлаа: ${burgerContext.burger.error}`}
+      {burgerContext.burger.saving ? (
         <Spinner />
       ) : (
         <div>
@@ -84,20 +85,4 @@ const ContactData = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    price: state.burgerReducer.totalPrice,
-    ingredients: state.burgerReducer.ingredients,
-    newOrderStatus: state.orderReducer.newOrder,
-    userId: state.signupLoginReducer.userId,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    saveOrderAction: (newOrder) => dispatch(actions.saveOrder(newOrder)),
-    clearOrder: () => dispatch(actions.clearOrder()),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactData);
+export default ContactData;

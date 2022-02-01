@@ -1,14 +1,14 @@
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
-import { connect } from "react-redux";
-
+import BurgerContext from "../../context/BurgerContext";
 import Burger from "../../components/Burger";
 import Button from "../../components/general/Button";
 import css from "./style.module.css";
 
 const ShippingPage = (props) => {
   const navigate = useNavigate();
-
+  const burgerContext = useContext(BurgerContext).burger;
   const showContactData = () => {
     navigate("/ship/contact", { replace: true });
   };
@@ -19,7 +19,11 @@ const ShippingPage = (props) => {
         <strong>Enjoy your order...</strong>
       </p>
       <p style={{ fontSize: "24px" }}>
-        Total:<strong> {props.price ? props.price : 0}₮</strong>
+        Total:
+        <strong>
+          {" "}
+          {burgerContext.totalPrice ? burgerContext.totalPrice : 0}₮
+        </strong>
       </p>
       <Burger />
       <Button
@@ -37,8 +41,4 @@ const ShippingPage = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return { price: state.burgerReducer.totalPrice };
-};
-
-export default connect(mapStateToProps)(ShippingPage);
+export default ShippingPage;

@@ -1,32 +1,34 @@
-import React from "react";
+import React, { useContext } from "react";
 import BuildControl from "../BuildControl";
-import { connect } from "react-redux";
+import BurgerContext from "../../context/BurgerContext";
 
 import css from "./style.module.css";
 
 const BuildControls = (props) => {
-  const disabledIngredients = { ...props.ingredients };
+  const burgerContext = useContext(BurgerContext).burger;
+  const disabledIngredients = { ...burgerContext.ingredients };
   for (const key in disabledIngredients) {
     disabledIngredients[key] = disabledIngredients[key] <= 0;
   }
   return (
     <div className={css.BuildControls}>
       <p>
-        Burger price: <strong>{props.price ? props.price : 0}</strong>
+        Burger price:{" "}
+        <strong>
+          {burgerContext.totalPrice ? burgerContext.totalPrice : 0}
+        </strong>
       </p>
 
-      {Object.keys(props.ingredientNames).map((el) => (
+      {Object.keys(burgerContext.ingredientNames).map((el) => (
         <BuildControl
           key={el}
           disabledIngredients={disabledIngredients}
-          changeIngredient={props.changeIngredient}
           type={el}
-          ingredient={props.ingredientNames[el]}
         />
       ))}
       <button
         onClick={props.showConfirmModal}
-        disabled={props.disabled}
+        disabled={!burgerContext.purchasing} 
         className={css.OrderButton}
       >
         ЗАХИАЛАХ
@@ -35,13 +37,4 @@ const BuildControls = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    ingredients: state.burgerReducer.ingredients,
-    price: state.burgerReducer.totalPrice,
-    ingredientNames: state.burgerReducer.ingredientNames,
-    disabled: !state.burgerReducer.purchasing,
-  };
-};
-
-export default connect(mapStateToProps)(BuildControls);
+export default BuildControls;
