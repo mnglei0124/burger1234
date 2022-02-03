@@ -3,7 +3,6 @@ import React from "react";
 import css from "./style.module.css";
 
 const Order = (props) => {
-  console.log(props);
   return (
     <div className={css.Order}>
       <p>

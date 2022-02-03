@@ -5,9 +5,11 @@ import Button from "../general/Button";
 import css from "./style.module.css";
 import Spinner from "../general/Spinner";
 import BurgerContext from "../../context/BurgerContext";
+import UserContext from "../../context/UserContext";
 
 const ContactData = (props) => {
   const burgerContext = useContext(BurgerContext);
+  const userContext = useContext(UserContext);
   const [address, setAddress] = useState({
     name: "",
     city: "",
@@ -20,7 +22,6 @@ const ContactData = (props) => {
     }
 
     return () => {
-      console.log("order clearing...");
       burgerContext.clearBurger();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -31,22 +32,15 @@ const ContactData = (props) => {
   };
 
   const saveOrder = () => {
-    // const ingredients = (({ Salad, Cheese, Bacon, Meat }) => ({
-    //   Salad,
-    //   Cheese,
-    //   Bacon,
-    //   Meat,
-    // }))(props.ingredients);
-
     const newOrder = {
-      userId: "props.userId",
+      userId: userContext.state.userId,
       ingredients: burgerContext.burger.ingredients,
       price: burgerContext.burger.totalPrice,
       location: {
         ...address,
       },
     };
-    burgerContext.saveBurger(newOrder);
+    burgerContext.saveBurger(newOrder, userContext.state.token);
   };
 
   return (

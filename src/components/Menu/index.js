@@ -1,30 +1,26 @@
-import React, { Fragment } from "react";
-import { connect } from "react-redux";
-
+import React, { useContext } from "react";
+import UserContext from "../../context/UserContext";
 import MenuItem from "../MenuItems";
 import css from "./style.module.css";
 
-const Menu = (props) => (
-  <ul className={css.Menu}>
-    {props.userId ? (
-      <Fragment>
-        <MenuItem link="/">ШИНЭ ЗАХИАЛГА</MenuItem>
-        <MenuItem link="/orders">ЗАХИАЛГУУД</MenuItem>
-        <MenuItem link="/logout">ГАРАХ</MenuItem>
-      </Fragment>
-    ) : (
-      <Fragment>
-        <MenuItem link="/login">НЭВТРЭХ</MenuItem>
-        <MenuItem link="/signup">БҮРТГҮҮЛЭХ</MenuItem>
-      </Fragment>
-    )}
-  </ul>
-);
-
-const mapStateToProps = (state) => {
-  return {
-    userId: state.signupLoginReducer.userId,
-  };
+const Menu = (props) => {
+  const userContext = useContext(UserContext);
+  return (
+    <ul className={css.Menu}>
+      {userContext.state.userId ? (
+        <>
+          <MenuItem link="/">ШИНЭ ЗАХИАЛГА</MenuItem>
+          <MenuItem link="/orders">ЗАХИАЛГУУД</MenuItem>
+          <MenuItem link="/logout">ГАРАХ</MenuItem>
+        </>
+      ) : (
+        <>
+          <MenuItem link="/login">НЭВТРЭХ</MenuItem>
+          <MenuItem link="/signup">БҮРТГҮҮЛЭХ</MenuItem>
+        </>
+      )}
+    </ul>
+  );
 };
 
-export default connect(mapStateToProps)(Menu);
+export default Menu;

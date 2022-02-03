@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router";
-import * as actions from "../../redux/actions/loginActions";
-
+import UserContext from "../../context/UserContext";
 import Button from "../../components/general/Button";
 import css from "./style.module.css";
 import Spinner from "../../components/general/Spinner";
 
 const Login = (props) => {
+  const userContext = useContext(UserContext);
   const [state, setState] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
@@ -26,7 +25,7 @@ const Login = (props) => {
 
   const login = () => {
     navigate("/orders");
-    props.login(state.email, state.password);
+    userContext.loginUser(state.email, state.password);
   };
   return (
     <div className={css.Login}>
@@ -40,32 +39,18 @@ const Login = (props) => {
         type="password"
         placeholder="Нууц үг"
       ></input>
-      {props.logginIn && <Spinner />}
+      {userContext.state.logginIn && <Spinner />}
 
-      {props.firebaseError && (
-        <div style={{ color: "red" }}>{props.firebaseError}</div>
+      {userContext.state.error && (
+        <div style={{ color: "red" }}>{userContext.state.error}</div>
       )}
-      <div className={css.Remember}>
+      {/* <div className={css.Remember}>
         <input type="checkbox" id="remember" />
         <label htmlFor="remember">Remember me</label>
-      </div>
+      </div> */}
       <Button text="Нэвтрэх" btnType="Success" clicked={login} />
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    logginIn: state.signupLoginReducer.logginIn,
-    firebaseError: state.signupLoginReducer.firebaseError,
-    userId: state.signupLoginReducer.userId,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    login: (email, password) => dispatch(actions.loginUser(email, password)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;

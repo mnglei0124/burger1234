@@ -2,11 +2,13 @@ import React, { useEffect, useContext } from "react";
 import Spinner from "../../components/general/Spinner";
 import Order from "../../components/Order";
 import OrderContext from "../../context/OrderContext";
+import UserContext from "../../context/UserContext";
 //import css from "./style.module.css";
 const OrderPage = (props) => {
   const orderContext = useContext(OrderContext);
+  const userContext = useContext(UserContext);
   useEffect(() => {
-    orderContext.loadOrders();
+    orderContext.loadOrders(userContext.state.userId, userContext.state.token);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -22,18 +24,5 @@ const OrderPage = (props) => {
     </div>
   );
 };
-
-// const mapStateToProps = (state) => {
-//   return {
-//     orders: state.orderReducer.orders,
-//     loading: state.orderReducer.loading,
-//     userId: state.signupLoginReducer.userId,
-//   };
-// };
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     loadOrders: (userId) => dispatch(actions.loadOrders(userId)),
-//   };
-// };
 
 export default OrderPage;

@@ -21,14 +21,11 @@ const initialState = {
 
 export const BurgerStore = (props) => {
   const [burger, setBurger] = useState(initialState);
-  const saveBurger = (newOrder) => {
+  const saveBurger = (newOrder, token) => {
     setBurger({ ...burger, saving: true });
 
-    //const token = getState().signupLoginReducer.token;
-    // /orders.json?auth=${token}
-
     axios
-      .post(`/orders.json`, newOrder)
+      .post(`/orders.json?auth=${token}`, newOrder)
       .then((response) => {
         setBurger({ ...burger, saving: false, finished: true, error: null });
       })

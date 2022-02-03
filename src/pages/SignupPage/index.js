@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router";
 
 import Button from "../../components/general/Button";
 import Spinner from "../../components/general/Spinner";
-import * as actions from "../../redux/actions/signupActions";
+import UserContext from "../../context/UserContext";
 import css from "./style.module.css";
 
 const Signup = (props) => {
+  const userContext = useContext(UserContext);
   const [state, setState] = useState({
     email: "",
     password0: "",
@@ -18,7 +18,7 @@ const Signup = (props) => {
 
   const signup = () => {
     if (state.password0 === state.password1) {
-      props.signupUser(state.email, state.password0);
+      userContext.signupUser(state.email, state.password0);
     } else alert("password no match");
 
     navigate("/");
@@ -44,10 +44,10 @@ const Signup = (props) => {
         placeholder="Нууц үгээ давтана уу"
       ></input>
       {state.error && <div style={{ color: "red" }}>{state.error}</div>}
-      {props.firebaseError && (
-        <div style={{ color: "red" }}>{props.firebaseError}</div>
+      {userContext.state.error && (
+        <div style={{ color: "red" }}>{userContext.state.error}</div>
       )}
-      {props.saving ? (
+      {userContext.state.saving ? (
         <Spinner />
       ) : (
         <Button text="Бүртгүүлэх" btnType="Success" clicked={signup} />
@@ -56,19 +56,4 @@ const Signup = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    saving: state.signupLoginReducer.saving,
-    firebaseError: state.signupLoginReducer.firebaseError,
-    userId: state.signupLoginReducer.userId,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    signupUser: (email, password) =>
-      dispatch(actions.signupUser(email, password)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default Signup;
